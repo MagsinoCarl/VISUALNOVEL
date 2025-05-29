@@ -1,84 +1,137 @@
-# Declare characters used by this game.
-define e = Character("Carl Cems", color="0000FF")
-define j = Character("Matt", color="008000")
- 
-# The game starts here.
+﻿# Declare the main character
+  # Enables persistent variables in preferences
+
+label before_main_menu:
+    $ apply_ui_theme()
+    return
+
+$ persistent.ui_theme = "dark"
+
+default persistent.ui_theme = "default"  # This saves the user's selected theme
+
+init python:
+
+    def apply_ui_theme():
+        # Use persistent color or default to white
+        text_color = persistent.text_color if hasattr(persistent, "text_color") else "#FFFFFF"
+
+        # Change the say dialogue text color
+        style.say_dialogue.color = text_color
+
+        # Optionally, change window background text color or other UI elements here too
+        # For example, change textbox window text color or font color if needed
+
+        # To refresh styles immediately, call:
+        renpy.restart_interaction()
+
+
+image Carl_normal = im.Scale("images/Carl_normal.png", 1200, 1300)
+image Carl_talking = im.Scale("images/Carl_talking.png", 1200, 1300)
+image Carl_suggesting = im.Scale("images/Carl_suggesting.png", 1200, 1300)
+image Carl_thinking = im.Scale("images/Carl_thinking.png", 1200, 1300)
+image bg room = "bg_room.jpg"
+
+
+define c = Character("Carl", color="#80c4ff")
+
 label start:
+    stop music fadeout 1.0
+    scene bg_room at Transform(xysize=(3280, 3220))
 
-    scene bg_room
+    show Carl_normal at center with dissolve
+    c "Hey there."
 
-    # First scene: Carl on left, Jeppy not yet shown
-    show carl normal at left with dissolve
-    e "Matt... please. Just hear me out."                       
+    show Carl_talking at center with dissolve
+    c "Are you new to visual novels?"
 
-    # Show Jeppy at right
-    show matt normal at right with dissolve
-    j "Hear you out? After you threw everything away like it was nothing?"
-
-    # Carl speaks again (still normal)
-    show carl uniform sad1 at left with dissolve
-    e "I made a mistake. I was scared, I thought it was better to end it before I got hurt worse."
-
-    # Jeppy speaks again
-    show matt normal at right with dissolve
-    j "And what about me, Carl? Did you even think about what you were doing to me?"
-
-    # Carl switches to "cry" expression (still on left)
-    show carl uniform cry1 at left with dissolve
-    e "I thought I was protecting us. I thought you'd be better off without me."
-
-    # Jeppy switches to "cry" too (still on right)
-    show matt uniform sad1 at right with dissolve
-    j "You didn't even give me a choice. You decided for both of us."
-
-    # Carl speaks while still crying
-    show carl uniform cry2 at left with dissolve
-    e "I'm sorry... I'm sorry, Matt. I was stupid. I regret it every second. I just... I just want you back."
-    
-    # Jeppy replies still crying
-    show matt uniform sad2 at right with dissolve
-    j "It's not that easy, Carl. You broke something. And I don't know if I can just pretend it never happened."
-
-    # Carl begging
-    show carl uniform cry3 at left with dissolve
-    e "I don't want to pretend. I want to fix it. Please... just tell me what to do."
-
-    # ---- Here's the CHOICE ----
     menu:
-        "What will Matt do?"
+        "I'm new at this, sorry.":
+            jump tutorial
+        "I already know, thank you.":
+            jump skip_tutorial
 
-        "Give Carl another chance":
-            jump forgive_carl
+label tutorial:
 
-        "Walk away from Carl":
-            jump leave_carl
-    # ----------------------------
+    show Carl_suggesting at center with dissolve
+    c "No worries! I'm here to guide you around."
 
-# If the player chooses to forgive Carl
-label forgive_carl:
-    
-    show matt uniform sad1 at right
-    j "Maybe... maybe we can try again. But you have to promise me, Carl. No more running."
+    show Carl_talking at center with dissolve
+    c "This box below me? That's the text box."
 
-    show carl uniform cry4 at left
-    e "I promise. I'll never leave again. Thank you, Matt..."
+    show Carl_thinking at center with dissolve
+    c "All the story, dialogue, and narration happens here."
 
-    # You can continue the happy scene here
+    show Carl_suggesting at center with dissolve
+    c "Want a cleaner view of the background? Just press the H key on your keyboard to hide the UI."
+
+    show Carl_suggesting at center with dissolve
+    c "You can also roll back to dialogue with ease using your scroll wheel in you mouse!"
+
+    show Carl_thinking at center with dissolve
+    c "Want a cleaner view of the background? Just press the H key on your keyboard to hide the UI."
+
+    show Carl_talking at center with dissolve
+    c "You can press H again to bring everything back."
+
+    show Carl_thinking at center with dissolve
+    c "Now if you press the Esc key, you'll open the game menu."
+
+    show Carl_normal at center with dissolve
+    c "Let me explain the buttons there real quick!"
+
+    show Carl_talking at center with dissolve
+    c "History – lets you view past dialogue in case you missed something."
+
+    show Carl_suggesting at center with dissolve
+    c "Save and Load – save your progress or return to a previous point."
+
+    show Carl_thinking at center with dissolve
+    c "Preferences – change text speed, music volume, and other settings."
+
+    show Carl_talking at center with dissolve
+    c "About – gives info about the game."
+
+    show Carl_normal at center with dissolve
+    c "Help – shows all the controls."
+
+    show Carl_thinking at center with dissolve
+    c "And Quit – well... exits the game. Careful with that one."
+
+    show Carl_suggesting at center with dissolve
+    c "And don't forget the Return button – it brings you right back to the game."
+
+    show Carl_talking at center with dissolve
+    c "Got it? Sweet. Let's get started!"
+
+    jump main_game
+
+label skip_tutorial:
+
+    show Carl_normal at center with dissolve
+    c "Ah, a veteran I see. I'll leave you to it then."
+
+    jump main_game
+
+label main_game:
+
+    show Carl_talking at center with dissolve
+    c "This is where the real story begins..."
+
+    # Continue your actual visual novel story from here...
+
     return
 
-# If the player chooses to leave Carl
-label leave_carl:
 
-    show matt uniform sad1 at right
-    j "I'm sorry, Carl. But I can't do this anymore. Goodbye."
+# Put this at the bottom of script.rpy
+label splashscreen:
+    scene black
+    show splash_bg
+    play music "splash_theme.mp3"
 
-    show carl uniform cry4 at left
-    e "Jeppy... please..."
+    call screen splash_screen
 
-    # Fade to black or sad ending
-    scene black with fade
-    "Carl was left standing alone."
+    stop music fadeout 1.0
 
-    scene bg school
- 
+    hide splash_bg with dissolve  # Optional: make splash image fade out only
     return
+

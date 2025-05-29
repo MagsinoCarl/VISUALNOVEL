@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 ## Initialization
 ################################################################################
 
@@ -138,26 +138,25 @@ style window:
     background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
 
 style namebox:
-    xpos gui.name_xpos
+    xpos 220
     xanchor gui.name_xalign
-    xsize gui.namebox_width
-    ypos gui.name_ypos
-    ysize gui.namebox_height
+    xsize 290
+    ypos 0
+    ysize 400
 
     background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
     padding gui.namebox_borders.padding
 
 style say_label:
     properties gui.text_properties("name", accent=True)
-    xalign gui.name_xalign
+    xalign 0.5
     yalign 0.5
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
 
-    xpos 450
-    xsize gui.dialogue_width
-    ypos 125
+    xpos 510
+    ypos 150
 
     adjust_spacing False
 
@@ -284,51 +283,28 @@ style quick_button_text:
 ## This screen is included in the main and game menus, and provides navigation
 ## to other menus, and to start the game.
 
-screen navigation():
-
-    vbox:
+screen main_navigation():
+    fixed:
         style_prefix "navigation"
-
-        xpos gui.navigation_xpos
-        yalign 0.5
-
         spacing gui.navigation_spacing
 
-        if main_menu:
+        imagebutton auto "gui/mm_start_%s.png" focus_mask True action Start() hovered [Play("sound", "audio/click.wav")]
+        imagebutton auto "gui/mm_save_%s.png" focus_mask True action ShowMenu("load")
+        imagebutton auto "gui/mm_pref_%s.png" focus_mask True action ShowMenu("preferences")
+        imagebutton auto "gui/mm_about_%s.png" focus_mask True action ShowMenu("about")
+        imagebutton auto "gui/mm_help_%s.png" focus_mask True action ShowMenu("help")
+        imagebutton auto "gui/mm_exit_%s.png" focus_mask True action Quit(confirm=True)
 
-            textbutton _("Start") action Start()
+    if gui.show_name:
+        vbox:
+            style "main_menu_vbox"
 
-        else:
+            text "[config.name!t]":
+                style "main_menu_title"
 
-            textbutton _("History") action ShowMenu("history")
-
-            textbutton _("Save") action ShowMenu("save")
-
-        textbutton _("Load") action ShowMenu("load")
-
-        textbutton _("Preferences") action ShowMenu("preferences")
-
-        if _in_replay:
-
-            textbutton _("End Replay") action EndReplay(confirm=True)
-
-        elif not main_menu:
-
-            textbutton _("Main Menu") action MainMenu()
-
-        textbutton _("About") action ShowMenu("about")
-
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-
-            ## Help isn't necessary or relevant to mobile devices.
-            textbutton _("Help") action ShowMenu("help")
-
-        if renpy.variant("pc"):
-
-            ## The quit button is banned on iOS and unnecessary on Android and
-            ## Web.
-            textbutton _("Quit") action Quit(confirm=not main_menu)
-
+            text "[config.version]":
+                style "main_menu_version"
+        
 
 style navigation_button is gui_button
 style navigation_button_text is gui_button_text
@@ -341,6 +317,8 @@ style navigation_button_text:
     properties gui.text_properties("navigation_button")
 
 
+
+
 ## Main Menu screen ############################################################
 ##
 ## Used to display the main menu when Ren'Py starts.
@@ -348,20 +326,38 @@ style navigation_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#main-menu
 
 screen main_menu():
-
-    ## This ensures that any other menu screen is replaced.
     tag menu
+    add gui.main_menu_background
 
-    # Background image with dissolve animation
-    add "gui/main_menu.png" at dissolve_in
-    
+    use main_navigation
     ## This empty frame darkens the main menu.
-    frame:
-        style "main_menu_frame"
+    #frame:
+    #    style "main_menu_frame"
 
     ## The use statement includes another screen inside this one. The actual
     ## contents of the main menu are in the navigation screen.
-    use navigation
+
+screen navigation():
+    vbox:
+        style_prefix "navigation"
+        xpos gui.navigation_xpos
+        yalign 0.5
+        spacing gui.navigation_spacing
+
+        textbutton _("History") action ShowMenu("history")
+        textbutton _("Save") action ShowMenu("save")
+        textbutton _("Load") action ShowMenu("load")
+        textbutton _("Preferences") action ShowMenu("preferences")
+        textbutton _("UI Customization") action ShowMenu("ui_customization")
+
+        if _in_replay:
+            textbutton _("End Replay") action EndReplay(confirm=True)
+        elif not main_menu:
+            textbutton _("Main Menu") action MainMenu()
+
+        textbutton _("About") action ShowMenu("about")
+        textbutton _("Help") action ShowMenu("help")
+        textbutton _("Quit") action Quit(confirm=True)
 
     if gui.show_name:
 
@@ -730,6 +726,20 @@ style slot_button_text:
 screen preferences():
 
     tag menu
+
+    frame:
+        style_prefix "pref"
+
+        has vbox
+
+        label _("Preferences")
+        textbutton _("Return") action Return()
+
+        # You can insert the UI theme section anywhere inside this vbox:
+        label _("UI Theme")
+
+        textbutton "Default" action [SetVariable("persistent.ui_theme", "default"), Function(apply_ui_theme)]
+        textbutton "Dark Mode" action [SetVariable("persistent.ui_theme", "dark"), Function(apply_ui_theme)]
 
     use game_menu(_("Preferences"), scroll="viewport"):
 
@@ -1611,7 +1621,31 @@ style slider_slider:
     variant "small"
     xsize 1200
 
-# Add this somewhere below, outside the screen
-transform dissolve_in:
-    alpha 0.0
-    linear 1.0 alpha 1.0
+screen splash_screen():
+    tag menu
+
+    add "splash_bg"  # Replace with your background image filename
+
+    text "Press to Continue" xpos 0.5 ypos 0.9 xanchor 0.5 yanchor 0.5 size 40 color "#FFFFFF" outlines [(2, "#000000")]
+
+    key "mouseup_1" action Return()  # Mouse click
+    key "K_RETURN" action Return()   # Enter key
+    key "K_SPACE" action Return()    # Spacebar
+
+screen ui_customization():
+    tag menu
+
+    frame:
+        style_prefix "pref"
+        has vbox
+
+        label "UI Customization"
+
+        text "Text Color:"
+        hbox:
+            spacing 10
+            textbutton "White" action [SetVariable("persistent.text_color", "#FFFFFF"), Function(apply_ui_theme)]
+            textbutton "Black" action [SetVariable("persistent.text_color", "#000000"), Function(apply_ui_theme)]
+            textbutton "Red" action [SetVariable("persistent.text_color", "#FF0000"), Function(apply_ui_theme)]
+
+        textbutton "Return" action Return()

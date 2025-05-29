@@ -20,12 +20,13 @@ define config.check_conflicting_properties = True
 ################################################################################
 
 
+
 ## Colors ######################################################################
 ##
 ## The colors of text in the interface.
 
 ## An accent color used throughout the interface to label and highlight text.
-define gui.accent_color = '#9933ff'
+define gui.accent_color = '#cc0000'
 
 ## The color used for a text button when it is neither selected nor hovered.
 define gui.idle_color = '#888888'
@@ -35,7 +36,7 @@ define gui.idle_color = '#888888'
 define gui.idle_small_color = '#aaaaaa'
 
 ## The color that is used for buttons and bars that are hovered.
-define gui.hover_color = '#c184ff'
+define gui.hover_color = '#e06666'
 
 ## The color used for a text button when it is selected but not focused. A
 ## button is selected if it is the current screen or preference value.
@@ -46,8 +47,8 @@ define gui.insensitive_color = '#8888887f'
 
 ## Colors used for the portions of bars that are not filled in. These are not
 ## used directly, but are used when re-generating bar image files.
-define gui.muted_color = '#3d1466'
-define gui.hover_muted_color = '#5b1e99'
+define gui.muted_color = '#510000'
+define gui.hover_muted_color = '#7a0000'
 
 ## The colors used for dialogue and menu choice text.
 define gui.text_color = '#ffffff'
@@ -57,19 +58,19 @@ define gui.interface_text_color = '#ffffff'
 ## Fonts and Font Sizes ########################################################
 
 ## The font used for in-game text.
-define gui.text_font = "fonts/Quicksand_Bold.otf"
+define gui.text_font = "OffBit-DotBold.ttf"
 
 ## The font used for character names.
-define gui.name_text_font = "fonts/Quicksand_Bold.otf"
+define gui.name_text_font = "Quicksand_Bold.otf"
 
 ## The font used for out-of-game text.
-define gui.interface_text_font = "fonts/Quicksand_Bold.otf"
+define gui.interface_text_font = "OffBit-DotBold.ttf"
 
 ## The size of normal dialogue text.
-define gui.text_size = 50
+define gui.text_size = 44
 
 ## The size of character names.
-define gui.name_text_size = 65
+define gui.name_text_size = 60
 
 ## The size of text in the game's user interface.
 define gui.interface_text_size = 44
@@ -106,8 +107,8 @@ define gui.textbox_yalign = 1.0
 
 ## The placement of the speaking character's name, relative to the textbox.
 ## These can be a whole number of pixels from the left or top, or 0.5 to center.
-define gui.name_xpos = 300
-define gui.name_ypos = 30
+define gui.name_xpos = 480
+define gui.name_ypos = 0
 
 ## The horizontal alignment of the character's name. This can be 0.0 for left-
 ## aligned, 0.5 for centered, and 1.0 for right-aligned.
@@ -204,13 +205,14 @@ define gui.quick_button_text_selected_color = gui.accent_color
 ##
 ## Choice buttons are used in the in-game menus.
 
-define gui.choice_button_width = 1580
-define gui.choice_button_height = 250
+define gui.choice_button_width = 1250
+define gui.choice_button_height = 100
 define gui.choice_button_tile = False
-define gui.choice_button_borders = Borders(200, 100, 200, 100)
+define gui.choice_button_borders = Borders(100, 10, 100, 10)
 define gui.choice_button_text_font = gui.text_font
 define gui.choice_button_text_size = gui.text_size
 define gui.choice_button_text_xalign = 0.5
+define gui.choice_button_text_yalign = 0.5
 define gui.choice_button_text_idle_color = '#888888'
 define gui.choice_button_text_hover_color = "#ffffff"
 define gui.choice_button_text_insensitive_color = '#8888887f'
