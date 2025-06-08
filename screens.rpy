@@ -138,10 +138,10 @@ style window:
     background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
 
 style namebox:
-    xpos 220
+    xpos 580
     xanchor gui.name_xalign
     xsize 290
-    ypos 0
+    ypos -143
     ysize 400
 
     background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
@@ -153,9 +153,10 @@ style say_label:
     yalign 0.5
 
 style say_dialogue:
+    color "#000000"   # Black text
     properties gui.text_properties("dialogue")
 
-    xpos 510
+    xpos 620
     ypos 150
 
     adjust_spacing False
@@ -1649,3 +1650,174 @@ screen ui_customization():
             textbutton "Red" action [SetVariable("persistent.text_color", "#FF0000"), Function(apply_ui_theme)]
 
         textbutton "Return" action Return()
+
+##############################################################################
+#  CUSTOM NAVIGATION CHOICE SCREEN
+##############################################################################
+screen nav_door_gate():
+    # ── Door choice ─────────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)      # your textbox BG
+        padding (20, 45)                                 # inner padding
+        xpos 450         #  ← adjust these two numbers
+        ypos 750         #  ← until the box sits right over the door
+        textbutton "Public Library" action Jump("door_label")
+
+    # ── Gate choice ─────────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 45)
+        xpos 1380        #  ← move this one near the gate sprite
+        ypos 940
+        textbutton "Campus Grounds" action Jump("new_building")
+
+screen custom_choice_menu():
+
+    # background frame for the choice box (optional)
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)      # your textbox BG
+        padding (20, 65)                                 # inner padding
+        xpos 1150         #  ← adjust these two numbers
+        ypos 1200         #  ← until the box sits right over the door
+        textbutton "Explore the new building" action Jump("explore_new_building")
+
+    # ── Gate choice ─────────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 70        #  ← move this one near the gate sprite
+        ypos 750
+        textbutton "Check resting area" action Jump("resting_ground")
+
+    # ── ENTRANCE ─────────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 1550        #  ← move this one near the gate sprite
+        ypos 750
+        textbutton "Enter Building" action Jump("enter_buildingcampus")
+
+screen rest_choice_menu():
+
+    # ── Hideout button ─────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 150      # ← tweak these numbers until
+        ypos 1200      # ← the frame sits over the hide-out spot
+        textbutton "Go to the Hideout" action Jump("hideout")
+
+    # ── Stone-circle button ────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 1810        # ← where the stone circle tables are
+        ypos 1200
+        textbutton "Check Stone-Circle Table" action Jump("stone_circle")
+
+    # ── Stone-circle button ────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 1110        # ← where the stone circle tables are
+        ypos 1200
+        textbutton "Walk Back" action Jump("callscreen")
+
+################################################################################
+#  SCREEN – pick a room inside the building
+################################################################################
+screen inside_choice_menu():
+
+    # ── Hideout button ─────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 1000      # ← tweak these numbers until
+        ypos 550      # ← the frame sits over the hide-out spot
+        textbutton "Cashier" action Jump("cashier")
+
+    # ── Stone-circle button ────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 2250        # ← where the stone circle tables are
+        ypos 600
+        textbutton "Turn Right" action Jump("right_hall")
+
+    # ── Stone-circle button ────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 250        # ← where the stone circle tables are
+        ypos 600
+        textbutton "Turn Left" action Jump("left_hall")
+
+    # ── Stone-circle button ────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 65)
+        xpos 1250        # ← where the stone circle tables are
+        ypos 1250
+        textbutton "walk back" action Jump("callscreen")
+
+screen right_hall_menu():
+
+    # ── Enter Clinic ───────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 200   # Adjust x/y until each button sits over the door, window, etc.
+        ypos 850
+        textbutton "Clinic" action Jump("clinic_room")
+
+    # ── Inspect LIN Door ───────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 1200
+        ypos 1200
+        textbutton "Walk back" action Jump("inside_building")
+
+    # ── Move Forward ───────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 1150
+        ypos 500
+        textbutton "Walk Further" action Jump("right_hall_forward")
+
+screen left_hall_menu():
+
+    # ── Inspect LIN Door ───────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 1200
+        ypos 1200
+        textbutton "Walk back" action Jump("inside_building")
+
+    # ── Move Forward ───────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 1250
+        ypos 500
+        textbutton "Walk Further" action Jump("avrhall")
+
+screen left_hallcorner_menu():
+
+    # ── Inspect LIN Door ───────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 1200
+        ypos 1200
+        textbutton "Walk back" action Jump("inside_building")
+
+    # ── Move Forward ───────────────────────────────────────────────────────
+    frame:
+        background Frame("gui/nav_box.png", 15, 15)
+        padding (20, 55)
+        xpos 1250
+        ypos 500
+        textbutton "AVR" action Jump("avrdor")
